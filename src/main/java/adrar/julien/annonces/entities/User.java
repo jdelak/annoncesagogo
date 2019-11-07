@@ -2,10 +2,12 @@ package adrar.julien.annonces.entities;
 
 
 import javax.persistence.*;
+
+import java.util.Collection;
 import java.util.Set;
 
 	@Entity
-	@Table(name = "user")
+	@Table(name = "users")
 	public class User {
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -20,7 +22,11 @@ import java.util.Set;
 	    private String passwordConfirm;
 
 	    @ManyToMany
-	    private Set<Role> roles;
+	    @JoinTable(name="users_roles",
+        joinColumns = {@JoinColumn(name="user_id", referencedColumnName="user_id")},
+        inverseJoinColumns = {@JoinColumn(name="role_id", referencedColumnName="role_id")}
+    )
+	    Collection<Role> roles;
 
 	    public Long getId() {
 	        return id;
@@ -54,12 +60,14 @@ import java.util.Set;
 	        this.passwordConfirm = passwordConfirm;
 	    }
 
-	    public Set<Role> getRoles() {
-	        return roles;
-	    }
+		public Collection<Role> getRoles() {
+			return roles;
+		}
 
-	    public void setRoles(Set<Role> roles) {
-	        this.roles = roles;
-	    }
+		public void setRoles(Collection<Role> roles) {
+			this.roles = roles;
+		}
+
+	   
 	    
 }
