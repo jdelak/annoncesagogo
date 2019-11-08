@@ -53,12 +53,13 @@
 		<div class="row">
 			<c:forEach items="${ annonces.content }" var="annonce">
 				<div class="col-lg-6">
-					<small><c:out value="${ annonce.dateParution }" /></small>
+					<small><fmt:formatDate value="${annonce.dateParution}" pattern="yyyy-MM-dd" /></small>
 					<a href="/annonces/${annonce.id }">
 					<h3>
 						<c:out value="${ annonce.title }" />
 					</h3>
 					</a>
+					<p># ${annonce.categoryAnnonce.title}</p>
 					<p>
 						<c:out value="${ annonce.description }" />
 					</p>

@@ -37,6 +37,7 @@
 			<small>${annonce.dateParution}</small>
 			<p>${annonce.description}</p>
 		</div>
+		<a href="/">Retour</a>
 		</div>
 	</div>
 
