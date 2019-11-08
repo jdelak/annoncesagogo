@@ -11,7 +11,7 @@
 
 </head>
 <body>
-	<h1>Ajout d'annonces</h1>
+	<h1>Editer Annonce</h1>
     <form method="post" action="">
    		<label for="category_annonce">Catégorie</label>
    		<select name="category_annonce" id="category_annonce">
@@ -20,9 +20,9 @@
    		 </c:forEach>
    		</select>
          <label for="title">Titre : </label>
-         <input type="text" name="title" id="title" />
+         <input type="text" name="title" id="title" value="${annonce.title }"/>
          <label for="description">Description : </label>
-         <textarea name="description" id="description"></textarea>
+         <textarea name="description" id="description">${annonce.description}</textarea>
          <label for="dateParution">Date Parution : </label>
 		 <input type="date" name="dateParution" id="dateParution" value="2019-11-08" />
 		 <label for="title">Activer l'annonce : </label>

@@ -3,12 +3,16 @@ package adrar.julien.annonces.entities;
 
 import javax.persistence.*;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 	@Entity
 	@Table(name = "users")
-	public class User {
+	public class User implements UserDetails{
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.SEQUENCE)
 	    @Column(name="user_id")
@@ -20,6 +24,9 @@ import java.util.Set;
 
 	    @Transient
 	    private String passwordConfirm;
+	    
+	    @OneToMany
+		private List <Annonce> annonces;
 
 	    @ManyToMany
 	    @JoinTable(name="users_roles",
@@ -67,6 +74,46 @@ import java.util.Set;
 		public void setRoles(Collection<Role> roles) {
 			this.roles = roles;
 		}
+
+		public List<Annonce> getAnnonces() {
+			return annonces;
+		}
+
+		public void setAnnonces(List<Annonce> annonces) {
+			this.annonces = annonces;
+		}
+
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean isAccountNonExpired() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isAccountNonLocked() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isCredentialsNonExpired() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		
+		
 
 	   
 	    

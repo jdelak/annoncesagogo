@@ -31,43 +31,12 @@
 
 
 		</nav>
-		<spring:message code="list_size" var="list_size"
-			text="Annonces par page" htmlEscape="false" />
-		<c:out value="${list_size} " />
-		<c:forEach var="i" begin="6" end="12" step="6">
-			<c:choose>
-				<c:when test="${size == i}">
-					<c:out value="${i}" />
-				</c:when>
-				<c:otherwise>
-					<spring:url value="" var="sizeUrl">
-						<spring:param name="page" value="0" />
-						<spring:param name="size" value="${i}" />
-						<spring:param name="sort" value="${sortDesc}" />
-					</spring:url>
-					<a href="${sizeUrl}">${i}</a>
-				</c:otherwise>
-			</c:choose>
-			<c:out value=" " />
-		</c:forEach>
 		<div class="row">
-			<c:forEach items="${ annonces.content }" var="annonce">
-				<div class="col-lg-6">
-					<small><c:out value="${ annonce.dateParution }" /></small>
-					<a href="/annonces/${annonce.id }">
-					<h3>
-						<c:out value="${ annonce.title }" />
-					</h3>
-					</a>
-					<p>
-						<c:out value="${ annonce.description }" />
-					</p>
-				</div>
-
-			</c:forEach>
+		<div class="col-lg-12">
+			<h2>${annonce.title}</h2>
+			<small>${annonce.dateParution}</small>
+			<p>${annonce.description}</p>
 		</div>
-		<div class="row-fluid">
-			<util:pagination thispage="${annonces}"></util:pagination>
 		</div>
 	</div>
 

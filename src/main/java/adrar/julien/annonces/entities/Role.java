@@ -39,4 +39,9 @@ public class Role {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+	public String getRole() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

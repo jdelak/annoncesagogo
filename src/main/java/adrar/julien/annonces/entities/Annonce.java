@@ -33,6 +33,9 @@ public class Annonce {
 	private Category categoryAnnonce;
 	@Column(name="annonce_active")
 	private boolean active;
+	@ManyToOne
+	@JoinColumn(name ="user_annonce")
+	private User userAnnonce;
 	
 	public Long getId() {
 		return id;
@@ -70,6 +73,14 @@ public class Annonce {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	public User getUserAnnonce() {
+		return userAnnonce;
+	}
+	public void setUserAnnonce(User userAnnonce) {
+		this.userAnnonce = userAnnonce;
+	}
+	
+	
 	
 	
 	
