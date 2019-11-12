@@ -2,6 +2,8 @@ package adrar.julien.annonces;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -42,7 +45,6 @@ public class MainController {
 		
 	
 	@GetMapping("/")
-	
 	public String list(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, value = 6)  Pageable pageable , Model model) {
 		//pageable = PageRequest.of(0, 6, Sort.by(Order.desc("id")));
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
@@ -96,9 +98,13 @@ public class MainController {
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userRepo.findByUsername(username);
-		a.setUserAnnonce(user);
 		
+		a.setUserAnnonce(user);
+		List <Annonce> userAnnonce = user.getAnnonces();
+		userAnnonce.add(a);
+		userRepo.save(user);
 		annonceRepo.save(a);
+		
 		
 		List<Annonce> annonces = annonceRepo.findAll();
 		ModelAndView view = new ModelAndView("index");
@@ -121,13 +127,32 @@ public class MainController {
 	
 	@GetMapping("annonces/edit/{id}")
 	public ModelAndView formEditAnnonce(@PathVariable long id) {
+		
 		ModelAndView view = new ModelAndView("editannonce");
 		List <Category> categories = catRepo.findAll();
-		Annonce annonce = annonceRepo.getOne(id);
+		Annonce annonce = annonceRepo.findById(id).get();
+		
+		// Logique pour voir si l'utilisateur courant est l'auteur de l'annonce
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = loggedInUser.getName();
+		User user = userRepo.findByUsername(username);
+		long userId = user.getId();
+		long authorAnnonceId = annonce.getUserAnnonce().getId();
+		System.out.println(userId);
+		System.out.println(authorAnnonceId);
 		view.addObject("categories", categories);
 		view.addObject("annonce", annonce);
+
+		if(userId == authorAnnonceId) {
+			view.addObject("categories", categories);
+			view.addObject("annonce", annonce);
+			
+			return view;
+		}
+		else {
+			return new ModelAndView("403");
+		}
 		
-		return view;
 	}
 	
 	@PostMapping("annonces/edit/{id}")
@@ -160,7 +185,6 @@ public class MainController {
 		annonceRepo.save(annonce);
 
 	}
-	
 	
 	
 	
