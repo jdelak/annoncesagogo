@@ -31,6 +31,8 @@
 
 
 		</nav>
+		<a class="btn btn-success" href="/annonces/add">Ajouter une annonce</a>
+		<br>
 		<spring:message code="list_size" var="list_size"
 			text="Annonces par page" htmlEscape="false" />
 		<c:out value="${list_size} " />
@@ -52,17 +54,21 @@
 		</c:forEach>
 		<div class="row">
 			<c:forEach items="${ annonces.content }" var="annonce">
-				<div class="col-lg-6">
-					<small><fmt:formatDate value="${annonce.dateParution}" pattern="yyyy-MM-dd" /></small>
-					<a href="/annonces/${annonce.id }">
-					<h3>
-						<c:out value="${ annonce.title }" />
-					</h3>
-					</a>
-					<p># ${annonce.categoryAnnonce.title}</p>
-					<p>
-						<c:out value="${ annonce.description }" />
-					</p>
+				<div class="col-lg-4">
+					<div class="card">
+						<img src="https://fakeimg.pl/250x100/" class="card-img-top" alt="...">
+						<div class="card-body">
+							<small># ${annonce.categoryAnnonce.title} - <fmt:formatDate value="${annonce.dateParution}" pattern="yyyy-MM-dd" /></small>
+							<a href="/annonces/${annonce.id }">
+							<h3 class="card-title">
+								<c:out value="${ annonce.title }" />
+							</h3>
+							</a>
+							<p class="card-text">
+								<c:out value="${ annonce.description }" />
+							</p>
+						</div>
+					</div>
 				</div>
 
 			</c:forEach>

@@ -25,5 +25,7 @@ public interface AnnonceRepository extends JpaRepository<Annonce, Long> {
 	
 	List<Annonce> findByActiveFalse();
 	
+	Page<Annonce> findByActiveTrueAndDeletedFalse(Pageable pageable);
+	
 	
 }

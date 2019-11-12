@@ -33,6 +33,8 @@ public class Annonce {
 	private Category categoryAnnonce;
 	@Column(name="annonce_active")
 	private boolean active;
+	@Column(name="annonce_deleted")
+	private boolean deleted;
 	@ManyToOne
 	@JoinColumn(name ="user_annonce")
 	private User userAnnonce;
@@ -72,6 +74,15 @@ public class Annonce {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+	
+	
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	public User getUserAnnonce() {
 		return userAnnonce;

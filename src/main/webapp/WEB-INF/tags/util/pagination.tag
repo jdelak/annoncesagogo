@@ -11,7 +11,7 @@
 <c:set var="size" value="${thispage.size}" />
 <div class="col-lg-12">
 	<nav aria-label="Page navigation example">
-	<ul class="pagination">
+	<ul class="pagination justify-content-center">
 		<c:choose>
 			<c:when test="${pageNumber ne 0}">
 				<spring:url value="" var="first">

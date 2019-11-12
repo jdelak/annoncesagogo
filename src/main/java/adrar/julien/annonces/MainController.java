@@ -57,7 +57,7 @@ public class MainController {
 		
 		System.out.println(customUser);
 
-		Page<Annonce> annonces = annonceRepo.findByActiveTrue(pageable);
+		Page<Annonce> annonces = annonceRepo.findByActiveTrueAndDeletedFalse(pageable);
 		model.addAttribute("annonces", annonces);
 		model.addAttribute("username", username);
 		model.addAttribute("id", userId);
@@ -89,7 +89,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/annonces/add")
-	public ModelAndView ajouterAnnonce(HttpServletRequest request, Annonce a) {
+	public ModelAndView ajouterAnnonce(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, value = 6)  Pageable pageable, HttpServletRequest request, Annonce a) {
 		
 		int categoryId = Integer.parseInt(request.getParameter("category_annonce"));
 		Category category = catRepo.getOne(categoryId);
@@ -98,17 +98,17 @@ public class MainController {
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userRepo.findByUsername(username);
+		long userId = user.getId();
 		
 		a.setUserAnnonce(user);
-		List <Annonce> userAnnonce = user.getAnnonces();
-		userAnnonce.add(a);
-		userRepo.save(user);
 		annonceRepo.save(a);
 		
 		
-		List<Annonce> annonces = annonceRepo.findAll();
-		ModelAndView view = new ModelAndView("index");
+		Page<Annonce> annonces = annonceRepo.findByActiveTrueAndDeletedFalse(pageable);
+		ModelAndView view = new ModelAndView("annonces");
 		view.addObject("annonces", annonces);
+		view.addObject("username", username);
+		view.addObject("id", userId);
 		return view;
 	}
 	
@@ -140,8 +140,6 @@ public class MainController {
 		long authorAnnonceId = annonce.getUserAnnonce().getId();
 		System.out.println(userId);
 		System.out.println(authorAnnonceId);
-		view.addObject("categories", categories);
-		view.addObject("annonce", annonce);
 
 		if(userId == authorAnnonceId) {
 			view.addObject("categories", categories);
@@ -156,7 +154,12 @@ public class MainController {
 	}
 	
 	@PostMapping("annonces/edit/{id}")
-	public ModelAndView editAnnonce(HttpServletRequest request, Annonce a) {
+	public ModelAndView editAnnonce(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, value = 6)  Pageable pageable, HttpServletRequest request, Annonce a) {
+		
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = loggedInUser.getName();
+		User user = userRepo.findByUsername(username);
+		long userId = user.getId();
 		
 		int categoryId = Integer.parseInt(request.getParameter("category_annonce"));
 		Category category = catRepo.getOne(categoryId);
@@ -164,9 +167,11 @@ public class MainController {
 		
 		annonceRepo.save(a);
 		
-		List<Annonce> annonces = annonceRepo.findAll();
-		ModelAndView view = new ModelAndView("index");
+		Page<Annonce> annonces = annonceRepo.findByActiveTrueAndDeletedFalse(pageable);
+		ModelAndView view = new ModelAndView("annonces");
 		view.addObject("annonces", annonces);
+		view.addObject("username", username);
+		view.addObject("id", userId);
 		return view;
 	}
 	
@@ -179,10 +184,33 @@ public class MainController {
     }
 	
 	@GetMapping("/annonces/activate/{id}")	
-	public void activate(@PathVariable Long id){
+	public ModelAndView activate(@PathVariable Long id){
 		Annonce annonce = annonceRepo.getOne(id);
 		annonce.setActive(true);
 		annonceRepo.save(annonce);
+		List<Annonce> annonces = annonceRepo.findByActiveFalse();
+		ModelAndView view = new ModelAndView("index");
+		view.addObject("annonces", annonces);
+		return view;
+
+	}
+	
+	@GetMapping("/annonces/delete/{id}")	
+	public ModelAndView delete(@PageableDefault(sort = "id", direction = Sort.Direction.DESC, value = 6)  Pageable pageable, @PathVariable Long id){
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = loggedInUser.getName();
+		User user = userRepo.findByUsername(username);
+		long userId = user.getId();
+		
+		Annonce annonce = annonceRepo.getOne(id);
+		annonce.setDeleted(true);
+		annonceRepo.save(annonce);
+		Page<Annonce> annonces = annonceRepo.findByActiveTrueAndDeletedFalse(pageable);
+		ModelAndView view = new ModelAndView("annonces");
+		view.addObject("annonces", annonces);
+		view.addObject("username", username);
+		view.addObject("id", userId);
+		return view;
 
 	}
 	
